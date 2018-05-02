@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Music Tour Tracker</title>
+</head>
+<body>
+
+	<form id="artist-form">
+		
+		<label for="artist-form">Choose Your Artist</label>
+		<input type="text" id="artist-form">
+		<br>
+		<input type="select-artist" type="submit" value="GO">
+	</form>
+
+	<div id="artist-div"></div>
+	
+</body>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+  	
+  	function searchBandsInTown(artist) {
+
+  		//quwrying th bandsintown api for the selected artist 	
+  		var queryURL = "http://rest.bandsintown.com/artist/" + artist + 
+  		"?app_id=codingbootcamp";
+  		$.ajax({
+  			url: queryURL,
+  			method: "GET"
+
+  		}).done(function(response) {
+
+  			// printing the entire object to the console
+  			console.log(response);
+
+  			// Constructing HTML containing the artist info 
+  			var artistName = $("<h1>").text(response.name);
+
+  			var artistImage = $("<a>").attr("href", response.url).append(artistName);
+
+  			var artistURL = $("<img>").attr("src", response,thumb_url);
+
+  			var trackerCount = $("<h2").text(response.tracker_count + " fans tracking this artist");
+
+  			var upcomingEvents = $("<h2").text(response.upcomg_event_count + " upcoming Events");
+
+  			var goToArtist = $("<a>").attr("href", response.url).text("see Tour Dates");
+
+  			// Empty the contents of the artist-div, append the next artist content
+  			$("#artist-div").empty();
+  			$("#artist-div").append(artistURL, artistImage, trackerCount, upcomingEvents, goToArtist);
+  		});
+  	}
+
+		//Events handler for user clicking the select-artist buttom
+	$("#select-artist").on("click", function(event) {
+
+		//preventing the buttom from trying to submit the form
+		event.preventDefault();
+
+		// storing the artist name
+		var artist = $("#artist-input").val().trim();
+
+		//running the searcchBandsInTown function (passing in the artist as an argument)
+		searchBandsInTown(artist);
+
+	}) 
+
+  </script>
+</html>
